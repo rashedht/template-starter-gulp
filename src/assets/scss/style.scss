@@ -1,0 +1,21 @@
+
+/*=============================================
+=            CSS Index            =
+=============================================
+
+    -> Default styles
+    -> Header
+    -> Footer
+    -> Sidebar
+
+
+
+/*=====  End of CSS Index  ======*/
+
+
+    @import '0-base/variables';
+    @import '0-base/mixins';
+    @import '1-global/default';
+    @import '2-layout/header';
+    @import '2-layout/footer';
+    @import '2-layout/sidebar';
