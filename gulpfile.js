@@ -223,7 +223,7 @@ var autoPrefixer = require("gulp-autoprefixer"),
     gulp.task('upload_project', upload_project);
     gulp.task('minify_image', minify_image);
 
-    const build = gulp.series(clean_tmp, copy_assets, compile_html, css, js);
+    const build = gulp.series(copy_assets, compile_html, css, js);
     const buildWatch = gulp.series(build, gulp.parallel(browser_sync, watch_files));
 
     gulp.task('default', buildWatch);
