@@ -14,7 +14,6 @@ var autoPrefixer = require("gulp-autoprefixer"),
     plumber = require('gulp-plumber'),
     notify = require('gulp-notify'),
     imagemin = require('gulp-imagemin'),
-    sourcemaps = require('gulp-sourcemaps'),
     imageminJpegRecompress = require('imagemin-jpeg-recompress');
 
     /**
@@ -65,12 +64,10 @@ var autoPrefixer = require("gulp-autoprefixer"),
         
         gulp.src(styleSass)
         .pipe(customPlumber('Error Running Sass'))
-        .pipe(sourcemaps.init())
         .pipe(wait(500))
         .pipe(sass())
         .pipe(autoPrefixer(AUTOPREFIXER_BROWSERS))
         .pipe(csscomb())
-        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest("./src/assets/css"))
         .pipe(browserSync.stream());
 

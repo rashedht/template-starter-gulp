@@ -22,7 +22,6 @@
     "gulp-notify": "^3.2.0",
     "gulp-plumber": "^1.2.1",
     "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.0",
     "gutil": "^1.6.4",
     "imagemin-jpeg-recompress": "^6.0.0",
