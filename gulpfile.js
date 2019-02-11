@@ -13,8 +13,10 @@ var autoPrefixer = require("gulp-autoprefixer"),
     del = require('del'),
     plumber = require('gulp-plumber'),
     notify = require('gulp-notify'),
+    prettyHtml = require('gulp-pretty-html'),
     imagemin = require('gulp-imagemin'),
-    imageminJpegRecompress = require('imagemin-jpeg-recompress');
+    imageminJpegRecompress = require('imagemin-jpeg-recompress'),
+    mmq = require('gulp-merge-media-queries');
 
     /**
      * Browser selection for Autoprefixer
@@ -43,7 +45,6 @@ var autoPrefixer = require("gulp-autoprefixer"),
      activeJs = "./src/assets/js/active.js";
 
 
-
     /* browser sync */
 
     function browser_sync() {
@@ -57,7 +58,6 @@ var autoPrefixer = require("gulp-autoprefixer"),
         });
     };
 
-
     /* SCSS compile */
     
     function css(done){
@@ -68,6 +68,7 @@ var autoPrefixer = require("gulp-autoprefixer"),
         .pipe(sass())
         .pipe(autoPrefixer(AUTOPREFIXER_BROWSERS))
         .pipe(csscomb())
+        .pipe(mmq())
         .pipe(gulp.dest("./src/assets/css"))
         .pipe(browserSync.stream());
 
@@ -77,8 +78,9 @@ var autoPrefixer = require("gulp-autoprefixer"),
      /* JS tasks */
     
      function js(done) {
-        gulp.src([vendorJs, activeJs])
-        .pipe(customPlumber('Error Running JS'));
+        gulp.src(activeJs)
+        .pipe(customPlumber('Error Running JS'))
+        .pipe(gulp.dest('./src/assets/js/'));
         done();
     };
 
@@ -88,10 +90,11 @@ var autoPrefixer = require("gulp-autoprefixer"),
         gulp.src( 'src/*.html' )
             .pipe(customPlumber('Error Running html-include'))
             .pipe(fileinclude({ basepath: "src/_partials/" }))
+            .pipe(prettyHtml())
             .pipe(gulp.dest('./tmp'))
             .pipe(browserSync.reload({
                 stream: true
-                })
+            })
             );
         done();
     };
@@ -103,11 +106,19 @@ var autoPrefixer = require("gulp-autoprefixer"),
         done();
     };
 
+    /* clean build folder */
+
+    function clean_build(done) {
+        del(['build/**/*']);
+        done();
+    };
+
     /* copy all folder to specific location */
 
     function copy_assets(done) {
         gulp.src('./src/assets/**/*')
         .pipe(changed('./tmp/assets'))
+        .pipe(customPlumber('Error Copying file'))
         .pipe(gulp.dest('./tmp/assets'));
         done();
     };
@@ -142,7 +153,7 @@ var autoPrefixer = require("gulp-autoprefixer"),
     }
  
     var remoteLogLocation = 'log/' + todayDate;
-    var remoteProjectLocation = 'project_name';
+    var remoteProjectLocation = 'project-name';
  
      
      /* upload log */
@@ -209,6 +220,29 @@ var autoPrefixer = require("gulp-autoprefixer"),
           done();
     };
 
+    
+    /* copy to production */
+    
+    function copy_to_production(done){
+        gulp.src(['tmp/**/*'])
+        .pipe(gulp.dest('build/'));
+        done();
+    }
+    
+
+    /* Minify image */
+    // function minify_image(done){
+    //     gulp.src('tmp/assets/img/products/**/*')
+    //     .pipe(kraken({
+    //         key: '91c9952e286576fe3379e7f4312d7580',
+    //         secret: '13c5855fe484ea269d635b9eff5b13eeb397da28',
+    //         lossy: true,
+    //         concurrency: 6
+    //     }));
+    //     done();
+    // }
+    
+
 
     gulp.task('browser_sync', browser_sync);
     gulp.task('css', css);
@@ -216,11 +250,17 @@ var autoPrefixer = require("gulp-autoprefixer"),
     gulp.task('compile_html', compile_html);
     gulp.task('copy_assets', copy_assets);
     gulp.task('clean_tmp', clean_tmp);
+    gulp.task('clean_build', clean_build);
     gulp.task('upload_log', upload_log);
     gulp.task('upload_project', upload_project);
     gulp.task('minify_image', minify_image);
+    gulp.task('copy_to_production', copy_to_production);
 
     const build = gulp.series(copy_assets, compile_html, css, js);
     const buildWatch = gulp.series(build, gulp.parallel(browser_sync, watch_files));
+
+    /* make production ready */
+    const production_ready = gulp.series(copy_to_production, minify_image);
+    gulp.task('production_ready', production_ready);
 
     gulp.task('default', buildWatch);
