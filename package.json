@@ -1,7 +1,7 @@
 {
-  "name": "Template Name",
+  "name": "template name",
   "version": "1.0.0",
-  "description": "Template description",
+  "description": "template description",
   "main": "gulpfile.js",
   "scripts": {
     "start": "gulp"
@@ -27,6 +27,9 @@
     "gulp-uglify": "^3.0.0",
     "gutil": "^1.6.4",
     "imagemin-jpeg-recompress": "^6.0.0",
+    "imagemin-mozjpeg": "^8.0.0",
+    "imagemin-pngquant": "^7.0.0",
+    "imagemin-svgo": "^7.0.0",
     "vinyl-ftp": "^0.6.1"
   },
   "dependencies": {

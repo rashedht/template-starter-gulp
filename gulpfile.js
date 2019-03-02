@@ -14,8 +14,11 @@ var autoPrefixer = require("gulp-autoprefixer"),
     plumber = require('gulp-plumber'),
     notify = require('gulp-notify'),
     prettyHtml = require('gulp-pretty-html'),
-    imagemin = require('gulp-imagemin'),
-    imageminJpegRecompress = require('imagemin-jpeg-recompress'),
+    imagemin        = require('gulp-imagemin'),
+    pngquant        = require('imagemin-pngquant'),
+    mozjpeg         = require('imagemin-mozjpeg'),
+    jpegRecompress  = require('imagemin-jpeg-recompress'),
+    svgo            = require('imagemin-svgo'),
     mmq = require('gulp-merge-media-queries');
 
     /**
@@ -153,7 +156,7 @@ var autoPrefixer = require("gulp-autoprefixer"),
     }
  
     var remoteLogLocation = 'log/' + todayDate;
-    var remoteProjectLocation = 'project-name';
+    var remoteProjectLocation = 'template_name';
  
      
      /* upload log */
@@ -194,30 +197,14 @@ var autoPrefixer = require("gulp-autoprefixer"),
     /* Minify images */
     
     function minify_image(done) {
+
         gulp.src('./tmp/assets/img/**/*')
-          .pipe(imagemin([
-            imagemin.gifsicle(),
-            imageminJpegRecompress({
-              loops:4,
-              min: 50,
-              max: 95,
-              quality:'high' 
-            }),
-            imagemin.optipng({optimizationLevel: 7}),
-            imagemin.svgo({
-                plugins: [
-                    {removeViewBox: true},
-                    {cleanupIDs: false}
-                ]
-            })
-          ],
-
-          {
-            verbose: true
-          }))
-          .pipe(gulp.dest('./build/assets/img'));
-
-          done();
+        .pipe(imagemin(
+            [pngquant(), mozjpeg(), jpegRecompress(), svgo()],
+            {verbose: true}
+        ))
+        .pipe(gulp.dest('./build/assets/img'));
+        done();
     };
 
     
@@ -228,20 +215,7 @@ var autoPrefixer = require("gulp-autoprefixer"),
         .pipe(gulp.dest('build/'));
         done();
     }
-    
 
-    /* Minify image */
-    // function minify_image(done){
-    //     gulp.src('tmp/assets/img/products/**/*')
-    //     .pipe(kraken({
-    //         key: '91c9952e286576fe3379e7f4312d7580',
-    //         secret: '13c5855fe484ea269d635b9eff5b13eeb397da28',
-    //         lossy: true,
-    //         concurrency: 6
-    //     }));
-    //     done();
-    // }
-    
 
 
     gulp.task('browser_sync', browser_sync);
