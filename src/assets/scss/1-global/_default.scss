@@ -130,41 +130,27 @@
 
 /*----------  Sharp border tippyjs theme  ----------*/
 
+
   /* If `animateFill: true` (default) */
-  .tippy-tooltip.sharpborder-theme .tippy-backdrop {
-    background-color: #383838;
+  .tippy-tooltip.sharpborder__yellow-theme .tippy-backdrop {
+    background-color: #222;
     font-weight: 400;
     color: #fff;
   }
   
   /* If `animateFill: false` */
-  .tippy-tooltip.sharpborder-theme {
+  .tippy-tooltip.sharpborder__yellow-theme {
     font-weight: 400;
     border-radius: 0;
     font-size: 12px;
-    box-shadow: 4px 4px 8px rgba(0,0,0,.3);
-    background: #383838;
+    //box-shadow: 4px 4px 8px rgba(0,0,0,.3);
+    background-color: #222;
     color: #fff;
     line-height: 12px;
     white-space: nowrap;
     padding: 8px 10px;
   }
 
-  /* If `animateFill: true` (default) */
-  .tippy-tooltip.roundborder-theme .tippy-backdrop {
-    background-color: #383838;
-    font-weight: 400;
-    color: #fff;
-  }
-  
-  /* If `animateFill: false` */
-  .tippy-tooltip.roundborder-theme {
-    font-weight: 400;
-    font-size: 12px;
-    box-shadow: 4px 4px 8px rgba(0,0,0,.3);
-    background: #383838;
-    color: #fff;
-    line-height: 12px;
-    white-space: nowrap;
-    padding: 8px 10px;
+  .tippy-popper[x-placement^='top'] .tippy-tooltip.sharpborder__yellow-theme .tippy-arrow {
+    border-bottom-color: #222;
   }
