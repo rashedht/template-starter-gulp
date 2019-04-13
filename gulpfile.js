@@ -1,33 +1,81 @@
-"use strict";
-
-var autoPrefixer = require("gulp-autoprefixer"),
-    browserSync = require("browser-sync"),
-    csscomb = require("gulp-csscomb"),
-    gulp = require("gulp"),
-    sass = require("gulp-sass"),
-    wait = require('gulp-wait'),
-    gutil = require("gutil"),
-    ftp = require("vinyl-ftp"),
-    fileinclude = require('gulp-file-include'),
-    changed = require('gulp-changed'),
-    del = require('del'),
-    plumber = require('gulp-plumber'),
-    notify = require('gulp-notify'),
-    prettyHtml = require('gulp-pretty-html'),
+var gulp            = require('gulp'),
+    clean           = require('gulp-clean'),
+    browserSync     = require('browser-sync').create(),
+    changed         = require('gulp-changed'),
+    concat          = require('gulp-concat'),
+    sass            = require('gulp-sass'),
+    autoprefixer    = require('gulp-autoprefixer'),
+    uglifycss       = require('gulp-uglifycss'),
+    uglify          = require('gulp-uglify'),
+    notify          = require('gulp-notify'),
+    plumber         = require('gulp-plumber'),
+    sourcemaps      = require('gulp-sourcemaps'),
+    fileInclude     = require('gulp-file-include'),
+    beautifyCode    = require('gulp-beautify-code'),
     imagemin        = require('gulp-imagemin'),
-    pngquant        = require('imagemin-pngquant'),
+    imageminUPNG    = require("imagemin-upng"),
     mozjpeg         = require('imagemin-mozjpeg'),
     jpegRecompress  = require('imagemin-jpeg-recompress'),
     svgo            = require('imagemin-svgo'),
-    mmq = require('gulp-merge-media-queries');
+    mmq             = require('gulp-merge-media-queries');
+    
+    // Source Folder Locations
+    src = {
+        'root': './src/',
+        
+        'rootHtml': './src/*.html',
+        'rootPartials': './src/partials/',
+        
+        'rootFonts': './src/assets/fonts/*',
+        'fontsAll': './src/assets/fonts/**/*',
+        
+        'rootVendorCss': './src/assets/css/vendor/*.css',
+        'rootPluginsCss': './src/assets/css/plugins/*.css',
+        
+        
+        'rootScss': './src/assets/scss/*',
+        'scssAll': './src/assets/scss/**/*',
+        
+        'rootVendorJs': './src/assets/js/vendor/*.js',
+        'rootPluginsJs': './src/assets/js/plugins/*.js',
+        
+        'pluginsJsRelFolder': './src/assets/js/plugins/plugins-related/**/*',
+        'pluginsJsRelFolderRoot': './src/assets/js/root-plugins-related/**/*',
+        
+        'mainJs': './src/assets/js/main.js',
+        
+        'images': './src/assets/img/**/*',
 
-    /**
-     * Browser selection for Autoprefixer
-     * @type {Array}
-     */
-
-    var AUTOPREFIXER_BROWSERS = [
-        "last 2 version",
+        'revolution': './src/assets/revolution/**/*',
+        'php_copy': './src/assets/php/**/*',
+    },
+    
+    // Destination Folder Locations
+    dest = {
+        'root': './dest/',
+        'fonts': './dest/assets/fonts/',
+        'assets': './dest/assets/',
+        'scss': './dest/assets/scss/',
+        
+        'rootCss': './dest/assets/css',
+        'rootVendorCss': './dest/assets/css/vendor/',
+        'rootPluginsCss': './dest/assets/css/plugins/',
+        
+        'rootJs': './dest/assets/js',
+        'rootVendorJs': './dest/assets/js/vendor/',
+        'rootPluginsJs': './dest/assets/js/plugins/',
+        
+        'images': './dest/assets/img/',
+        'revolution': './dest/assets/revolution/',
+        'php_copy': './dest/assets/php/',
+    },
+    
+    // Separator For Vendor CSS & JS
+    separator = '\n\n/*====================================*/\n\n',
+    
+    // Autoprefixer Options
+    autoPreFixerOptions = [
+        "last 4 version",
         "> 1%",
         "ie >= 9",
         "ie_mob >= 10",
@@ -40,201 +88,261 @@ var autoPrefixer = require("gulp-autoprefixer"),
         "bb >= 10"
     ];
 
-     /* file locations */
-
-     var styleSass = "./src/assets/scss/style.scss",
-     sassPartialFiles = "src/assets/scss/**/*.scss",
-     vendorJs = "./src/assets/js/vendors.js",
-     activeJs = "./src/assets/js/active.js";
 
 
-    /* browser sync */
+/*-- 
+    Live Synchronise & Reload
+--------------------------------------------------------------------*/
 
-    function browser_sync() {
-        browserSync.init({
-            server: {
-                baseDir: "./tmp",
-                index: "index.html",
-            },
-            port: 5566,
-            notify: false
-        });
-    };
+// Browser Synchronise
+function liveBrowserSync(done) {
+    browserSync.init({
+        server: {
+            baseDir: dest.root,
+            index: "index.html"
+        },
+        port: 5566,
+        notify: false
+    });
+    done();
+}
+// Reload
+function reload(done) {
+    browserSync.reload();
+    done();
+}
 
-    /* SCSS compile */
-    
-    function css(done){
-        
-        gulp.src(styleSass)
-        .pipe(customPlumber('Error Running Sass'))
-        .pipe(wait(500))
-        .pipe(sass())
-        .pipe(autoPrefixer(AUTOPREFIXER_BROWSERS))
-        .pipe(csscomb())
-        .pipe(mmq())
-        .pipe(gulp.dest("./src/assets/css"))
-        .pipe(browserSync.stream());
 
-        done();
-    };
-
-     /* JS tasks */
-    
-     function js(done) {
-        gulp.src(activeJs)
-        .pipe(customPlumber('Error Running JS'))
-        .pipe(gulp.dest('./src/assets/js/'));
-        done();
-    };
-
-    /* Include Html Pertials */
-
-    function compile_html(done) {
-        gulp.src( 'src/*.html' )
-            .pipe(customPlumber('Error Running html-include'))
-            .pipe(fileinclude({ basepath: "src/_partials/" }))
-            .pipe(prettyHtml())
-            .pipe(gulp.dest('./tmp'))
-            .pipe(browserSync.reload({
-                stream: true
-            })
-            );
-        done();
-    };
-
-    /* clean tmp folder */
-
-    function clean_tmp(done) {
-        del(['tmp/**/*']);
-        done();
-    };
-
-    /* clean build folder */
-
-    function clean_build(done) {
-        del(['build/**/*']);
-        done();
-    };
-
-    /* copy all folder to specific location */
-
-    function copy_assets(done) {
-        gulp.src('./src/assets/**/*')
-        .pipe(changed('./tmp/assets'))
-        .pipe(customPlumber('Error Copying file'))
-        .pipe(gulp.dest('./tmp/assets'));
-        done();
-    };
-
-    /* watch files */
-    
-    function watch_files(){
-        gulp.watch(sassPartialFiles, css);
-        gulp.watch([vendorJs, activeJs]).on("change", browserSync.reload);
-        gulp.watch('src/**/*', copy_assets);
-        gulp.watch(["src/*.html" , "src/_partials/**/*.htm"], compile_html);
-        gulp.watch(["src/*.html" , "src/_partials/**/*.htm"]).on("change", browserSync.reload);
-    }
-
-    /* Gulp Ftp Server Upload */
-
-    var d = new Date(),
-    month = d.getMonth(),
-    todayDate = d.getFullYear()+'.'+(month + 1)+'.'+d.getDate();
- 
-    var localFiles = ['tmp/**/*'];
-
-    function getFtpConnection() {
-         return ftp.create({
-             host: 'ftp.whizthemes.com',
-             port: 21,
-             user: 'rashed@whizthemes.com',
-             password: 'agP8[;4dT.Ax',
-             parallel: 5,
-             log: gutil.log
-         });
-    }
- 
-    var remoteLogLocation = 'log/' + todayDate;
-    var remoteProjectLocation = 'template_name';
- 
-     
-     /* upload log */
-     
-    function upload_log(done) {
-         var conn = getFtpConnection();
-         gulp.src(localFiles, {
-             base: './tmp/',
-             buffer: false
-         }).pipe(conn.dest(remoteLogLocation));
-         done();
-    };  
- 
-     /* upload project */
-     
-    function upload_project(done) {
-         var conn = getFtpConnection();
-         gulp.src(localFiles, {
-             base: './tmp/',
-             buffer: false
-         }).pipe(conn.dest(remoteProjectLocation));
-         done();
-    };  
-
-    /*  custom plumber */
-
-    function customPlumber(errTitle) {
-        return plumber({
-            errorHandler: notify.onError({
+/*-- 
+    Gulp Custom Notifier
+--------------------------------------------------------------------*/
+function customPlumber(errTitle) {
+    return plumber({
+        errorHandler: notify.onError({
             title: errTitle || "Error running Gulp",
             message: "Error: <%= error.message %>",
             sound: "Glass"
-            })
-        });
-    }
+        })
+    });
+}
+
+/*-- 
+    Gulp Other Tasks
+--------------------------------------------------------------------*/
+
+/*-- Remove Destination Folder Before Starting Gulp --*/
+function cleanProject(done) {
+    gulp.src(dest.root)
+        .pipe(customPlumber('Error On Clean App'))
+        .pipe(clean());
+    done();
+}
+
+/*-- Copy Font Form Source to Destination Folder --*/
+function fonts(done) {
+    gulp.src(src.rootFonts)
+        .pipe(customPlumber('Error On Copy Fonts'))
+        .pipe(gulp.dest(dest.fonts));
+    done();
+}
+
+/*-- 
+    All HTMl Files Compile With Partial & Copy Paste To Destination Folder
+--------------------------------------------------------------------*/
+function html(done) {
+    gulp.src(src.rootHtml)
+        .pipe(customPlumber('Error On Compile HTML'))
+        .pipe(fileInclude({ basepath: src.rootPartials }))
+        .pipe(beautifyCode())
+        .pipe(gulp.dest(dest.root));
+    done();
+}
+
+/*-- 
+    CSS & SCSS Task
+--------------------------------------------------------------------*/
+
+/*-- Vendor CSS --*/
+function vendorCss(done) {
+    gulp.src(src.rootVendorCss)
+        .pipe(customPlumber('Error On Copying Vendor CSS'))
+        .pipe(gulp.dest(dest.rootVendorCss))
+        .pipe(customPlumber('Error On Combining Vendor CSS'))
+        .pipe(concat('vendor.css', {newLine: separator}))
+        .pipe(autoprefixer(autoPreFixerOptions))
+        .pipe(gulp.dest(dest.rootVendorCss))
+        .pipe(customPlumber('Error On Combine & Minifying Vendor CSS'))
+        .pipe(concat('vendor.min.css', {newLine: separator}))
+        .pipe(uglifycss())
+        .pipe(autoprefixer(autoPreFixerOptions))
+        .pipe(gulp.dest(dest.rootVendorCss));
+    done();
+}
+
+/*-- All CSS Plugins --*/
+function pluginsCss(done) {
+    gulp.src(src.rootPluginsCss)
+        .pipe(customPlumber('Error On Copying Plugins CSS'))
+        .pipe(gulp.dest(dest.rootPluginsCss))
+        .pipe(customPlumber('Error On Combining Plugins CSS'))
+        .pipe(concat('plugins.css', {newLine: separator}))
+        .pipe(autoprefixer(autoPreFixerOptions))
+        .pipe(gulp.dest(dest.rootPluginsCss))
+        .pipe(customPlumber('Error On Combine & Minifying Plugins CSS'))
+        .pipe(concat('plugins.min.css', {newLine: separator}))
+        .pipe(uglifycss())
+        .pipe(autoprefixer(autoPreFixerOptions))
+        .pipe(gulp.dest(dest.rootPluginsCss));
+    done();
+}
+
+/*-- Gulp Compile Scss to Css Task & Minify --*/
+function styleCss(done) {
+    var styleScss = [
+        './src/assets/scss/style.scss'
+    ];
+    gulp.src(styleScss)
+        .pipe(sourcemaps.init())
+        .pipe(customPlumber('Error On Compiling Style Scss'))
+        .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+        //.pipe(concat('style.css'))
+        .pipe(autoprefixer(autoPreFixerOptions))
+        .pipe(sourcemaps.write())
+        .pipe(mmq())
+        .pipe(gulp.dest(dest.rootCss))
+        .pipe(browserSync.stream())
+        .pipe(customPlumber('Error On Compiling & Minifying Style Scss'))
+        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+        // .pipe(concat('style.min.css'))
+        // .pipe(autoprefixer(autoPreFixerOptions))
+        .pipe(sourcemaps.write())
+        .pipe(mmq())
+        .pipe(gulp.dest(dest.rootCss))
+        .pipe(browserSync.stream());
+    done();
+}
+
+/*-- Gulp copy Scss --*/
+function scss(done) {
+    gulp.src(src.scssAll)
+        .pipe(changed(dest.scss))
+        .pipe(customPlumber('Error On Copying Scss'))
+        .pipe(gulp.dest(dest.scss));
+    done();
+}
+
+/*-- Copy image Form Source to Destination Folder --*/
+function images(done) {
+    gulp.src(src.images)
+        .pipe(customPlumber('Error On Copy Image'))
+        .pipe(gulp.dest(dest.images));
+    done();
+}
+
+/*-- Copy revolution Form Source to Destination Folder --*/
+function revolution(done) {
+    gulp.src(src.revolution)
+        .pipe(customPlumber('Error On Copy Image'))
+        .pipe(gulp.dest(dest.revolution));
+    done();
+}
+
+/*-- Copy php Form Source to Destination Folder --*/
+function php_copy(done) {
+    gulp.src(src.php_copy)
+        .pipe(customPlumber('Error On Copy Image'))
+        .pipe(gulp.dest(dest.php_copy));
+    done();
+}
 
 
-    /* Minify images */
+/*-- 
+    JS Task
+--------------------------------------------------------------------*/
+
+/*-- Vendor JS --*/
+function vendorJs(done) {
+    gulp.src(src.rootVendorJs)
+        .pipe(customPlumber('Error On Copying Vendor JS'))
+        .pipe(gulp.dest(dest.rootVendorJs))
+        
+    done();
+}
+
+/*-- All JS Plugins --*/
+function pluginsJs(done) {
+    gulp.src(src.rootPluginsJs)
+        .pipe(customPlumber('Error On Copying Plugin JS'))
+        .pipe(gulp.dest(dest.rootPluginsJs))
+        .pipe(customPlumber('Error On Combining Plugin JS'))
+        .pipe(concat('plugins.js', {newLine: separator}))
+        .pipe(gulp.dest(dest.rootPluginsJs))
+        .pipe(customPlumber('Error On Combining & Minifying Plugin JS'))
+        .pipe(concat('plugins.min.js', {newLine: separator}))
+        .pipe(uglify())
+        .pipe(gulp.dest(dest.rootPluginsJs));
+    done();
+}
+
+/*-- Gulp Main Js Task --*/
+
+function mainJs(done) {
+    gulp.src(src.mainJs)
+        .pipe(customPlumber('Error On Copying Main Js File'))
+        .pipe(gulp.dest(dest.rootJs));
+    done();
+}
+
+
+
+
+/*-- 
+    All, Watch & Default Task
+--------------------------------------------------------------------*/
+
+/*-- All --*/
+gulp.task('clean', cleanProject);
+gulp.task('allTask', gulp.series(images, revolution,  php_copy, fonts, html, vendorCss, pluginsCss, styleCss, scss, vendorJs, pluginsJs, mainJs));
+
+/*-- Watch --*/
+function watchFiles() {
+    gulp.watch(src.fontsAll, gulp.series(fonts, reload));
+    gulp.watch(src.images, gulp.series(images, reload));
+    gulp.watch(src.revolution, gulp.series(revolution, reload));
+    gulp.watch(src.php_copy, gulp.series(php_copy, reload));
     
-    function minify_image(done) {
+    gulp.watch(src.rootHtml, gulp.series(html, reload));
+    gulp.watch(src.rootPartials, gulp.series(html, reload));
+    
+    gulp.watch(src.rootVendorCss, gulp.series(vendorCss, reload));
+    gulp.watch(src.rootPluginsCss, gulp.series(pluginsCss, reload));
+    gulp.watch(src.scssAll, gulp.series(styleCss));
+    gulp.watch(src.scssAll, gulp.series(scss));
+    
+    gulp.watch(src.rootVendorJs, gulp.series(vendorJs, reload));
+    gulp.watch(src.rootPluginsJs, gulp.series(pluginsJs, reload));
+    gulp.watch(src.mainJs, gulp.series(mainJs, reload));
+}
 
-        gulp.src('./tmp/assets/img/**/*')
+/*-- Default --*/
+gulp.task('default', gulp.series('allTask', gulp.parallel(liveBrowserSync, watchFiles)));
+
+
+
+
+/*-- 
+    Image Optimization
+--------------------------------------------------------------------*/
+function minify_image(done) {
+    gulp.src(src.images)
         .pipe(imagemin(
-            [pngquant(), mozjpeg(), jpegRecompress(), svgo()],
+            [imageminUPNG(), mozjpeg(), jpegRecompress(), svgo()],
             {verbose: true}
         ))
-        .pipe(gulp.dest('./build/assets/img'));
-        done();
-    };
+        .pipe(gulp.dest(dest.images));
+    done();
+}
 
-    
-    /* copy to production */
-    
-    function copy_to_production(done){
-        gulp.src(['tmp/**/*'])
-        .pipe(gulp.dest('build/'));
-        done();
-    }
+/* other tasks */
 
-
-
-    gulp.task('browser_sync', browser_sync);
-    gulp.task('css', css);
-    gulp.task('js', js);
-    gulp.task('compile_html', compile_html);
-    gulp.task('copy_assets', copy_assets);
-    gulp.task('clean_tmp', clean_tmp);
-    gulp.task('clean_build', clean_build);
-    gulp.task('upload_log', upload_log);
-    gulp.task('upload_project', upload_project);
-    gulp.task('minify_image', minify_image);
-    gulp.task('copy_to_production', copy_to_production);
-
-    const build = gulp.series(copy_assets, compile_html, css, js);
-    const buildWatch = gulp.series(build, gulp.parallel(browser_sync, watch_files));
-
-    /* make production ready */
-    const production_ready = gulp.series(copy_to_production, minify_image);
-    gulp.task('production_ready', production_ready);
-
-    gulp.task('default', buildWatch);
+gulp.task('minify_image', minify_image);

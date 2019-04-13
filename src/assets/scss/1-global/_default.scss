@@ -1,10 +1,10 @@
 
 /*=============================================
-=            Theme default CSS            =
+=            Default CSS            =
 =============================================*/
 
 /*-- Google Font --*/
-@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,500,600,700|Montserrat:400,600,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i');
 
 
 *, *::after, *::before {
@@ -16,7 +16,7 @@
   body{
 
       line-height: $body-line-height;
-      font-size: $body-font-size;
+      @include font-size($body-font-size);
       font-style: normal;
       font-weight: $body-font-weight;
       visibility: visible;
@@ -24,6 +24,18 @@
       color: $body-text-color;
       position: relative;
       background-color: $body-bg-color;
+
+      &.no-overflow{
+        overflow: hidden;
+      }
+
+      &.boxed{
+        max-width: 1500px;
+        box-shadow: 0 0 30px rgba(0,0,0,.06);
+        margin: 0 auto;
+      }
+
+      min-height: 10000px;
   
   }
 
@@ -32,30 +44,25 @@
       font-family: $heading-font-family-name;
       font-weight: $heading-font-weight;
       margin-top: 0;
+      line-height: 1.23;
   }
   h1 {
-      font-size: 36px;
-      line-height: 42px;
+      @include font-size(39px);
   }
   h2 {
-      font-size: 30px;
-      line-height: 36px;
+    @include font-size(25px);
   }
   h3 {
-      font-size: 24px;
-      line-height: 30px;
+    @include font-size(22px);
   }
   h4 {
-      font-size: 18px;
-      line-height: 24px;
+    @include font-size(16px);
   }
   h5 {
-      font-size: 14px;
-      line-height: 18px;
+    @include font-size(14px);
   }
   h6 {
-      font-size: 12px;
-      line-height: 14px;
+    @include font-size(9px);
   }
   p:last-child {
       margin-bottom: 0;
@@ -93,24 +100,6 @@
   
   /*-- Tab Content & Pane Fix --*/
 
-  .tab-content {
-      width: 100%;
-      & .tab-pane {
-          display: block;
-          height: 0;
-          max-width: 100%;
-          visibility: hidden;
-          overflow: hidden;
-          opacity: 0;
-          &.active {
-              height: auto;
-              visibility: visible;
-              opacity: 1;
-              overflow: visible;
-          }
-      }
-  }
-  
 
   select {
     -webkit-appearance: none;
@@ -130,10 +119,9 @@
 
 /*----------  Sharp border tippyjs theme  ----------*/
 
-
   /* If `animateFill: true` (default) */
   .tippy-tooltip.sharpborder__yellow-theme .tippy-backdrop {
-    background-color: #222;
+    background-color: $theme-color--default;
     font-weight: 400;
     color: #fff;
   }
@@ -144,13 +132,73 @@
     border-radius: 0;
     font-size: 12px;
     //box-shadow: 4px 4px 8px rgba(0,0,0,.3);
-    background-color: #222;
+    background-color: $theme-color--default;
+    color: #fff;
+    line-height: 12px;
+    white-space: nowrap;
+    padding: 8px 10px;
+  }
+  .tippy-popper[x-placement^='bottom'] .tippy-tooltip.sharpborder__yellow-theme .tippy-arrow {
+    border-bottom-color: $theme-color--default;
+  }
+
+  /* If `animateFill: true` (default) */
+  .tippy-tooltip.sharpborder__black-theme .tippy-backdrop {
+    background-color: $black;
+    font-weight: 400;
+    color: #fff;
+  }
+  
+  /* If `animateFill: false` */
+  .tippy-tooltip.sharpborder__black-theme {
+    font-weight: 400;
+    border-radius: 0;
+    font-size: 12px;
+    //box-shadow: 4px 4px 8px rgba(0,0,0,.3);
+    background-color: $black;
     color: #fff;
     line-height: 12px;
     white-space: nowrap;
     padding: 8px 10px;
   }
 
-  .tippy-popper[x-placement^='top'] .tippy-tooltip.sharpborder__yellow-theme .tippy-arrow {
-    border-bottom-color: #222;
+  .tippy-popper[x-placement^='bottom'] .tippy-tooltip.sharpborder__black-theme .tippy-arrow {
+    border-bottom-color: $black;
   }
+
+  .tippy-popper[x-placement^='top'] .tippy-tooltip.sharpborder__black-theme .tippy-arrow {
+    border-top-color: $black;
+  }
+
+  .border{
+    border: 1px solid #eee !important;
+  }
+
+  .border-top{
+    border-top: 1px solid #eee !important;
+  }
+
+  .border-right{
+    border-right: 1px solid #eee !important;
+  }
+
+  .border-bottom{
+    border-bottom: 1px solid #eee !important;
+  }
+
+  .border-left{
+    border-left: 1px solid #eee !important;
+  }
+
+
+
+  
+input{
+    &::placeholder{
+      transition: $transition--cubic;
+  }
+}
+
+
+
+/*=====  End of Default CSS  ======*/

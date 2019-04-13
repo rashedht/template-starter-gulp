@@ -20,7 +20,7 @@
         $recipient = "test@hasthemes.com";
 
         // Set the email subject.
-        $subject = "Demo - Mail From $name";
+        $subject = "Mail From $name";
 
         // Build the email content.
         $email_content = "Name: $name\n";

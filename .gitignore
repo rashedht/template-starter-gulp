@@ -17,7 +17,7 @@ x64/
 # build folder is nowadays used for build scripts and should not be ignored
 build/
 # tmp folder is nowadays used for tmp scripts and should not be ignored
-tmp/
+dest/
 
 package-lock.json
 

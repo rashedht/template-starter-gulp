@@ -1,10 +1,12 @@
 
 // project specific variables
 
+$theme-color--default: #ffc246;
+
 
 // Font Family
-$font-family-name: 'IBM Plex Sans', sans-serif; 
-$heading-font-family-name: 'IBM Plex Sans', sans-serif;
+$font-family-name: 'Roboto', sans-serif;
+$heading-font-family-name: 'Roboto', sans-serif;
 
 // Colors ---------------
 
@@ -12,15 +14,15 @@ $white: #ffffff;
 $black: #000000;
 
 // Body Text
-$body-text-color: #333;
+$body-text-color: #888;
 $body-font-weight: 400;
-$body-line-height: 20px;
+$body-line-height: 1.66;
 $body-font-size: 15px;
 $body-bg-color: $white;
 
 // Heading Text
-$heading-text-color: #333333;
-$heading-font-weight: 600;
+$heading-text-color: $theme-color--black;
+$heading-font-weight: 700;
 
 
 
