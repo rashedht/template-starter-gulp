@@ -1,13 +1,19 @@
 
 // project specific variables
 
-$theme-color--default: #ffc246;
-$theme-color--black: #222;
+$theme-color--default: #5945e6;
+$theme-color--heading: #2e3280;
+$theme-color--black: #333333;
+$transition--default: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+$gradient--default: linear-gradient(218deg,#5E61E7 0,#9C7AF2 50%,#5E61E7 100%);
+
 
 
 // Font Family
-$font-family-name: 'Roboto', sans-serif;
-$heading-font-family-name: 'Roboto', sans-serif;
+$font-family-name: Rubik, Helvetica, Arial, sans-serif;
+$heading-font-family-name: Rubik, Helvetica, Arial, sans-serif;
+$font-awesome-pro: 'Font Awesome 5 Pro';
+$font-awesome-brand: 'Font Awesome 5 Brands';
 
 // Colors ---------------
 
@@ -15,15 +21,15 @@ $white: #ffffff;
 $black: #000000;
 
 // Body Text
-$body-text-color: #888;
+$body-text-color: #7e7e7e;
 $body-font-weight: 400;
-$body-line-height: 1.66;
+$body-line-height: 1.74;
 $body-font-size: 15px;
 $body-bg-color: $white;
 
 // Heading Text
-$heading-text-color: $theme-color--black;
-$heading-font-weight: 700;
+$heading-text-color: $theme-color--heading;
+$heading-font-weight: 500;
 
 
 

@@ -1,4 +1,3 @@
-
 /*=============================================
 =            CSS Index            =
 =============================================
@@ -17,12 +16,10 @@
     -> Scroll top
 
 
-
 /*=====  End of CSS Index  ======*/
 
 
     @import '0-base/variables';
-    @import '0-base/rfs';
     @import '0-base/mixins';
     @import '0-base/helper';
     @import '1-global/default';
@@ -36,4 +33,3 @@
     @import '3-elements/backgrounds';
     @import '3-elements/accordions';
     @import '3-elements/scroll-top';
-   

@@ -4,7 +4,7 @@
 =============================================*/
 
 /*-- Google Font --*/
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i');
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,300i,400,400i,500,500i,700,700i,900,900i');
 
 
 *, *::after, *::before {
@@ -16,7 +16,7 @@
   body{
 
       line-height: $body-line-height;
-      @include font-size($body-font-size);
+      font-size: $body-font-size;
       font-style: normal;
       font-weight: $body-font-weight;
       visibility: visible;
@@ -25,6 +25,9 @@
       position: relative;
       background-color: $body-bg-color;
 
+      &.no-overflow{
+        overflow: hidden;
+      }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -32,25 +35,44 @@
       font-family: $heading-font-family-name;
       font-weight: $heading-font-weight;
       margin-top: 0;
+      margin-bottom: 0;
       line-height: 1.23;
   }
   h1 {
-      @include font-size(39px);
+    font-size: 56px;
   }
   h2 {
-    @include font-size(25px);
+    font-size: 48px;
+    @media #{$desktop-device}{
+      font-size: 36px; 
+    }
+    @media #{$tablet-device}{
+      font-size: 36px;
+    }
+    @media #{$large-mobile}{
+      font-size: 30px;
+    }
   }
   h3 {
-    @include font-size(22px);
+    font-size: 40px;
+    @media #{$desktop-device}{
+      font-size: 32px; 
+    }
+    @media #{$tablet-device}{
+      font-size: 28px;
+    }
+    @media #{$large-mobile}{
+      font-size: 25px;
+    }
   }
   h4 {
-    @include font-size(16px);
+    font-size: 34px;
   }
   h5 {
-    @include font-size(14px);
+    font-size: 24px;
   }
   h6 {
-    @include font-size(9px);
+    font-size: 18px;
   }
   p:last-child {
       margin-bottom: 0;
@@ -63,7 +85,7 @@
       cursor: pointer;
   }
   a, button, img, input, span {
-      transition: all 0.1s ease 0s;
+      transition: $transition--default;
   }
   *:focus {
       outline: none !important;
@@ -75,6 +97,7 @@
   }
   a:hover {
       text-decoration: none;
+      color: $theme-color--default;
   }
   button, input[type="submit"] {
       cursor: pointer;
@@ -98,11 +121,6 @@
     background-position: 95% 50%;
 
   }
-
-
-  .slick-slide>div>div {
-    vertical-align: middle;
-}
 
 
 /*----------  Sharp border tippyjs theme  ----------*/
@@ -159,26 +177,28 @@
   }
 
   .border{
-    border: 1px solid #eee !important;
+    border: 1px solid #ededed !important;
   }
 
   .border-top{
-    border-top: 1px solid #eee !important;
+    border-top: 1px solid #ededed !important;
   }
 
   .border-right{
-    border-right: 1px solid #eee !important;
+    border-right: 1px solid #ededed !important;
   }
 
   .border-bottom{
-    border-bottom: 1px solid #eee !important;
+    border-bottom: 1px solid #ededed !important;
   }
 
   .border-left{
-    border-left: 1px solid #eee !important;
+    border-left: 1px solid #ededed !important;
   }
 
-
-
+  ::selection {
+    color: $white;
+    background-color: $theme-color--default;
+}
 
 /*=====  End of Default CSS  ======*/

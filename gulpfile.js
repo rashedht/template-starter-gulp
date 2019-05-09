@@ -46,7 +46,7 @@ var gulp            = require('gulp'),
         
         'images': './src/assets/img/**/*',
 
-        'revolution': './src/assets/revolution/**/*',
+        // 'revolution': './src/assets/revolution/**/*',
         'php_copy': './src/assets/php/**/*',
     },
     
@@ -66,7 +66,7 @@ var gulp            = require('gulp'),
         'rootPluginsJs': './dest/assets/js/plugins/',
         
         'images': './dest/assets/img/',
-        'revolution': './dest/assets/revolution/',
+        // 'revolution': './dest/assets/revolution/',
         'php_copy': './dest/assets/php/',
     },
     
@@ -154,7 +154,8 @@ function html(done) {
         .pipe(customPlumber('Error On Compile HTML'))
         .pipe(fileInclude({ basepath: src.rootPartials }))
         .pipe(beautifyCode())
-        .pipe(gulp.dest(dest.root));
+        .pipe(gulp.dest(dest.root))
+        .pipe(browserSync.stream());
     done();
 }
 
@@ -199,26 +200,16 @@ function pluginsCss(done) {
 /*-- Gulp Compile Scss to Css Task & Minify --*/
 function styleCss(done) {
     var styleScss = [
-        './src/assets/scss/style.scss'
+        './src/assets/scss/style.scss',
     ];
     gulp.src(styleScss)
         .pipe(sourcemaps.init())
         .pipe(customPlumber('Error On Compiling Style Scss'))
         .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
-        //.pipe(concat('style.css'))
         .pipe(autoprefixer(autoPreFixerOptions))
-        .pipe(sourcemaps.write())
         .pipe(mmq())
         .pipe(gulp.dest(dest.rootCss))
         .pipe(browserSync.stream())
-        .pipe(customPlumber('Error On Compiling & Minifying Style Scss'))
-        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-        // .pipe(concat('style.min.css'))
-        // .pipe(autoprefixer(autoPreFixerOptions))
-        .pipe(sourcemaps.write())
-        .pipe(mmq())
-        .pipe(gulp.dest(dest.rootCss))
-        .pipe(browserSync.stream());
     done();
 }
 
@@ -240,12 +231,12 @@ function images(done) {
 }
 
 /*-- Copy revolution Form Source to Destination Folder --*/
-function revolution(done) {
-    gulp.src(src.revolution)
-        .pipe(customPlumber('Error On Copy Image'))
-        .pipe(gulp.dest(dest.revolution));
-    done();
-}
+// function revolution(done) {
+//     gulp.src(src.revolution)
+//         .pipe(customPlumber('Error On Copy Image'))
+//         .pipe(gulp.dest(dest.revolution));
+//     done();
+// }
 
 /*-- Copy php Form Source to Destination Folder --*/
 function php_copy(done) {
@@ -302,13 +293,13 @@ function mainJs(done) {
 
 /*-- All --*/
 gulp.task('clean', cleanProject);
-gulp.task('allTask', gulp.series(images, revolution,  php_copy, fonts, html, vendorCss, pluginsCss, styleCss, scss, vendorJs, pluginsJs, mainJs));
+gulp.task('allTask', gulp.series(images, fonts, php_copy, html, vendorCss, pluginsCss, styleCss, scss, vendorJs, pluginsJs, mainJs));
 
 /*-- Watch --*/
 function watchFiles() {
     gulp.watch(src.fontsAll, gulp.series(fonts, reload));
     gulp.watch(src.images, gulp.series(images, reload));
-    gulp.watch(src.revolution, gulp.series(revolution, reload));
+    //gulp.watch(src.revolution, gulp.series(revolution, reload));
     gulp.watch(src.php_copy, gulp.series(php_copy, reload));
     
     gulp.watch(src.rootHtml, gulp.series(html, reload));
