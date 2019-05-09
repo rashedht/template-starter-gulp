@@ -1,12 +1,12 @@
 {
-  "name": "gulp-package",
+  "name": "template-starter-gulp",
   "version": "1.0.0",
-  "description": "Gulp Pakage for all Hastech Employee",
+  "description": "Gulp Pakage for HTML Templates",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Hastech",
+  "author": "Rashed Mahmud",
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.18.13",
