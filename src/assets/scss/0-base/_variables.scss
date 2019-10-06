@@ -4,18 +4,14 @@
 $theme-color--default: #5945e6;
 $theme-color--heading: #2e3280;
 $theme-color--black: #333333;
-$transition--default: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-$gradient--default: linear-gradient(218deg,#5E61E7 0,#9C7AF2 50%,#5E61E7 100%);
-
+$transition--default: all 0.3s;
 
 
 // Font Family
 $font-family-name: Rubik, Helvetica, Arial, sans-serif;
 $heading-font-family-name: Rubik, Helvetica, Arial, sans-serif;
-$font-awesome-pro: 'Font Awesome 5 Pro';
-$font-awesome-brand: 'Font Awesome 5 Brands';
 
-// Colors ---------------
+// Colors
 
 $white: #ffffff;
 $black: #000000;
@@ -30,8 +26,6 @@ $body-bg-color: $white;
 // Heading Text
 $heading-text-color: $theme-color--heading;
 $heading-font-weight: 500;
-
-
 
 
 // Other Colors
@@ -101,7 +95,6 @@ $whatsapp: #189D0E;
 $xbox: #107C0F;
 $yahoo: #4101AF;
 $youtube: #FE0000;
-
 
 
 // Responsive Variables

@@ -29,14 +29,14 @@ var gulp            = require('gulp'),
         'rootFonts': './src/assets/fonts/*',
         'fontsAll': './src/assets/fonts/**/*',
         
-        'rootVendorCss': './src/assets/css/vendor/*.css',
+        'rootVendorCss': './src/assets/css/*.css',
         'rootPluginsCss': './src/assets/css/plugins/*.css',
         
         
         'rootScss': './src/assets/scss/*',
         'scssAll': './src/assets/scss/**/*',
         
-        'rootVendorJs': './src/assets/js/vendor/*.js',
+        'rootVendorJs': './src/assets/js/*.js',
         'rootPluginsJs': './src/assets/js/plugins/*.js',
         
         'pluginsJsRelFolder': './src/assets/js/plugins/plugins-related/**/*',
@@ -46,8 +46,7 @@ var gulp            = require('gulp'),
         
         'images': './src/assets/img/**/*',
 
-        // 'revolution': './src/assets/revolution/**/*',
-        'php_copy': './src/assets/php/**/*',
+        'php_copy': './src/assets/php/**/*'
     },
     
     // Destination Folder Locations
@@ -58,16 +57,15 @@ var gulp            = require('gulp'),
         'scss': './dest/assets/scss/',
         
         'rootCss': './dest/assets/css',
-        'rootVendorCss': './dest/assets/css/vendor/',
+        'rootVendorCss': './dest/assets/css/',
         'rootPluginsCss': './dest/assets/css/plugins/',
         
         'rootJs': './dest/assets/js',
-        'rootVendorJs': './dest/assets/js/vendor/',
+        'rootVendorJs': './dest/assets/js/',
         'rootPluginsJs': './dest/assets/js/plugins/',
         
         'images': './dest/assets/img/',
-        // 'revolution': './dest/assets/revolution/',
-        'php_copy': './dest/assets/php/',
+        'php_copy': './dest/assets/php/'
     },
     
     // Separator For Vendor CSS & JS
@@ -154,8 +152,7 @@ function html(done) {
         .pipe(customPlumber('Error On Compile HTML'))
         .pipe(fileInclude({ basepath: src.rootPartials }))
         .pipe(beautifyCode())
-        .pipe(gulp.dest(dest.root))
-        .pipe(browserSync.stream());
+        .pipe(gulp.dest(dest.root));
     done();
 }
 
@@ -200,7 +197,7 @@ function pluginsCss(done) {
 /*-- Gulp Compile Scss to Css Task & Minify --*/
 function styleCss(done) {
     var styleScss = [
-        './src/assets/scss/style.scss',
+        './src/assets/scss/style.scss'
     ];
     gulp.src(styleScss)
         .pipe(sourcemaps.init())
@@ -229,14 +226,6 @@ function images(done) {
         .pipe(gulp.dest(dest.images));
     done();
 }
-
-/*-- Copy revolution Form Source to Destination Folder --*/
-// function revolution(done) {
-//     gulp.src(src.revolution)
-//         .pipe(customPlumber('Error On Copy Image'))
-//         .pipe(gulp.dest(dest.revolution));
-//     done();
-// }
 
 /*-- Copy php Form Source to Destination Folder --*/
 function php_copy(done) {
@@ -285,21 +274,18 @@ function mainJs(done) {
 }
 
 
-
-
 /*-- 
     All, Watch & Default Task
 --------------------------------------------------------------------*/
 
 /*-- All --*/
 gulp.task('clean', cleanProject);
-gulp.task('allTask', gulp.series(images, fonts, php_copy, html, vendorCss, pluginsCss, styleCss, scss, vendorJs, pluginsJs, mainJs));
+gulp.task('allTask', gulp.series(images, php_copy, fonts, html, vendorCss, pluginsCss, styleCss, scss, vendorJs, pluginsJs, mainJs));
 
 /*-- Watch --*/
 function watchFiles() {
     gulp.watch(src.fontsAll, gulp.series(fonts, reload));
     gulp.watch(src.images, gulp.series(images, reload));
-    //gulp.watch(src.revolution, gulp.series(revolution, reload));
     gulp.watch(src.php_copy, gulp.series(php_copy, reload));
     
     gulp.watch(src.rootHtml, gulp.series(html, reload));
@@ -317,8 +303,6 @@ function watchFiles() {
 
 /*-- Default --*/
 gulp.task('default', gulp.series('allTask', gulp.parallel(liveBrowserSync, watchFiles)));
-
-
 
 
 /*-- 
