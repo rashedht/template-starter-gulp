@@ -1,6 +1,11 @@
 @@include('page-top.htm')
-@@include('header/header-default.htm')
-<i class="fa fa-facebook"></i>
-@@include('footer/footer-default.htm')
-@@include('header/elements/mobile-menu.htm')
+
+@@include('header/header.htm', {
+    "headerStyle": "default"
+})
+
+@@include('header/footer.htm', {
+    "footerStyle": "default"
+})
+
 @@include('page-bottom.htm')
