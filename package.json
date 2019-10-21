@@ -1,5 +1,5 @@
 {
-  "name": "template-starter-gulp",
+  "name": "brenda-html",
   "version": "1.0.0",
   "description": "Gulp Package for HTML Templates",
   "main": "gulpfile.js",
@@ -29,5 +29,8 @@
     "imagemin-mozjpeg": "^8.0.0",
     "imagemin-svgo": "^7.0.0",
     "imagemin-upng": "^1.2.7"
+  },
+  "dependencies": {
+    "gulp-remove-empty-lines": "^0.1.0"
   }
 }

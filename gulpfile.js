@@ -12,6 +12,7 @@ var gulp            = require('gulp'),
     sourcemaps      = require('gulp-sourcemaps'),
     fileInclude     = require('gulp-file-include'),
     beautifyCode    = require('gulp-beautify-code'),
+    removeEmptyLines = require('gulp-remove-empty-lines'),
     imagemin        = require('gulp-imagemin'),
     imageminUPNG    = require("imagemin-upng"),
     mozjpeg         = require('imagemin-mozjpeg'),
@@ -152,6 +153,7 @@ function html(done) {
         .pipe(customPlumber('Error On Compile HTML'))
         .pipe(fileInclude({ basepath: src.rootPartials }))
         .pipe(beautifyCode())
+        .pipe(removeEmptyLines())
         .pipe(gulp.dest(dest.root));
     done();
 }
