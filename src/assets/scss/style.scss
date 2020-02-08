@@ -1,35 +1,24 @@
 /*=============================================
-=            CSS Index            =
+=            Index            =
 =============================================
 
-    -> Helper CSS
-    -> Default styles
-    -> Spacing
-    -> Header
-    -> Footer
-    -> Sidebar
-    -> Container
-    -> Button
-    -> Section title
-    -> Backgrounds
-    -> Accordions
-    -> Scroll top
+  -> Default
+  -> Common
+  -> Helper
+  -> Spacing
+  -> Header
+  -> Footer
+  -> Button
+  -> Section Title
 
+/*=====  End of Index  ======*/
 
-/*=====  End of CSS Index  ======*/
-
-
-    @import '0-base/variables';
-    @import '0-base/mixins';
-    @import '0-base/helper';
-    @import '1-global/default';
-    @import '1-global/spacing';
-    @import '2-layout/header';
-    @import '2-layout/footer';
-    @import '2-layout/sidebar';
-    @import '2-layout/container'; 
-    @import '3-elements/button';
-    @import '3-elements/section-title';
-    @import '3-elements/backgrounds';
-    @import '3-elements/accordions';
-    @import '3-elements/scroll-top';
+@import "1-base/variables";
+@import "2-global/default";
+@import "2-global/common";
+@import "2-global/helper";
+@import "2-global/spacing";
+@import "3-layouts/header";
+@import "3-layouts/footer";
+@import "4-elements/button";
+@import "4-elements/section-title";

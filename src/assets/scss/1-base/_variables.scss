@@ -1,0 +1,31 @@
+// project specific variables
+$theme-color--default: #5945E6;
+$theme-color--heading: #2E3280;
+$transition--default: all 0.3s;
+
+// font family
+$body-font-family: Rubik, Helvetica, Arial, sans-serif;
+$heading-font-family: $body-font-family;
+
+// colors
+$white: #FFFFFF;
+$black: #000000;
+
+// body text
+$body-text-color: #7E7E7E;
+$body-font-weight: 400;
+$body-line-height: 1.5;
+$body-font-size: 15px;
+$body-bg-color: $white;
+
+// heading text
+$heading-font-weight: 500;
+
+// responsive variables
+$extra-large-desktop: "only screen and (min-width: 1500px)";
+$large-desktop: "only screen and (min-width: 1200px) and (max-width: 1499px)";
+$small-desktop: "only screen and (min-width: 992px) and (max-width: 1199px)";
+$extra-large-mobile: "only screen and (min-width: 768px) and (max-width: 991px)";
+$large-mobile: "only screen and (max-width: 767px)";
+$small-mobile: "only screen and (max-width: 575px)";
+$extra-small-mobile: "only screen and (max-width: 479px)";
